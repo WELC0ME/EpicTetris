@@ -38,6 +38,10 @@ if __name__ == '__main__':
                     config.TIME_BY_CELL = int(config.TIME_BY_CELL / 3)
                 elif event.key == pygame.K_b:
                     state = 2
+                elif event.key == pygame.K_v and state == 0:
+                    state = 3
+                elif event.key == pygame.K_q and (state == 2 or state == 3):
+                    state = 1
                 else:
                     if state == 1:
                         current_figure.change(event.key)
@@ -86,7 +90,11 @@ if __name__ == '__main__':
             drawing.lose()
             drawing.score(score)
         elif state == 2:
+            screen.fill(BACKGROUND)
             drawing.scoreboard()
+        elif state == 3:
+            screen.fill(BACKGROUND)
+            drawing.saving()
 
         pygame.display.flip()
         clock.tick(FPS)
