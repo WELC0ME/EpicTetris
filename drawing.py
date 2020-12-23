@@ -1,5 +1,6 @@
 import pygame
 from config import *
+from network import Network
 import config
 
 
@@ -15,6 +16,7 @@ class Drawing:
                      5: pygame.image.load('Sprites/green.jpg'),
                      6: pygame.image.load('Sprites/purple.jpg'),
                      7: pygame.image.load('Sprites/orange.jpg')}
+        self.network = Network()
 
     def board(self):
         for i in range(BOARD_HEIGHT):
@@ -27,8 +29,59 @@ class Drawing:
                                                      yShift + figure.positions[i][1] * TILE))
 
     def score(self, value):
-        self.surf.blit(pygame.font.Font(None, 50).render("Score: " + str(value), True, INFO_COLOR), SCORE_POSITION)
+        self.surf.blit(pygame.font.Font(None, 50).render("Score: " + str(value), True, INFO_COLOR), ROW)
+
+    def info(self):
+        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), get_row(1))
+        self.surf.blit(pygame.font.Font(None, 50).render("'B' - scoreboard", True, INFO_COLOR), get_row(2))
 
     def lose(self):
-        self.surf.blit(pygame.font.Font(None, 50).render("You lose!", True, INFO_COLOR), LOSE_POSITION)
-        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), RESTART_POSITION)
+        self.surf.blit(pygame.font.Font(None, 50).render("You lose!", True, INFO_COLOR), get_row(1))
+        self.surf.blit(pygame.font.Font(None, 50).render("'V' - save", True, INFO_COLOR), get_row(2))
+        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), get_row(3))
+        self.surf.blit(pygame.font.Font(None, 50).render("'B' - scoreboard", True, INFO_COLOR), get_row(4))
+
+    def scoreboard(self):
+        step = 40
+        res = self.network.get()
+        try:
+            if not res:
+                raise IndexError
+            data = {i.split('_')[0]: int(i.split('_')[1]) for i in res.split('\\n')[:-1]}
+            out = []
+            maximums = sorted(list(set([data[j] for j in data.keys()])), reverse=True)
+            counter = 0
+            while True:
+                if counter >= len(maximums):
+                    break
+                mx = maximums[counter]
+                counter += 1
+                for k in data.keys():
+                    if data[k] == mx:
+                        out.append((k, data[k]))
+                        if len(out) == 10:
+                            break
+                if len(out) == 10:
+                    break
+            for i in range(len(out)):
+                self.surf.blit(pygame.font.Font(None, 30).render(str(out[i][0]) + '    ' + str(out[i][1]) + ' score', True, INFO_COLOR), (xShift, yShift + step * i))
+        except IndexError:
+            print('Something went wrong')
+
+        self.surf.blit(pygame.font.Font(None, 30).render('Press Q to exit', True, INFO_COLOR), (xShift, yShift + step * 10))
+
+    def saving(self, name, score):
+        self.surf.blit(pygame.font.Font(None, 30).render('You name ' + name, True, INFO_COLOR),
+                       (xShift, yShift))
+        self.surf.blit(pygame.font.Font(None, 30).render('You score ' + str(score), True, INFO_COLOR),
+                       (xShift, yShift + 100))
+        self.surf.blit(pygame.font.Font(None, 30).render('Press H to save', True, INFO_COLOR),
+                       (xShift, yShift + 200))
+        self.surf.blit(pygame.font.Font(None, 30).render('Press Q to exit', True, INFO_COLOR),
+                       (xShift, yShift + 300))
+
+    def send(self, name, score):
+        self.network.send(str(name) + '_' + str(score))
+
+    def clear(self):
+        self.network.clear()
