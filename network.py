@@ -12,3 +12,6 @@ class Network:
 
     def send(self, value):
         requests.get(self.path + '?mode=write&data=' + value)
+
+    def clear(self):
+        requests.get(self.path + '?mode=clear')

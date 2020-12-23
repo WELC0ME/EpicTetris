@@ -11,6 +11,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(SIZE)
 
     drawing = Drawing(screen)
+    drawing.clear()
     current_figure = Figure()
     other = []
 
@@ -22,20 +23,33 @@ if __name__ == '__main__':
     deleted_row = None
 
     score = 0
+    user_name = ''
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
+                if state == 3 and event.key != pygame.K_q and event.key != pygame.K_h:
+                    new = pygame.key.name(event.key)
+                    if new != '_' and new.isalpha():
+                        user_name += new
+                elif event.key == pygame.K_h and state == 3:
+                    drawing.send(user_name, score)
+                    user_name = ''
                     state = 1
                     score = 0
                     config.BOARD = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
                     current_figure = Figure()
                     other = []
-                elif event.key == pygame.K_s:
-                    config.TIME_BY_CELL = int(config.TIME_BY_CELL / 3)
+                elif event.key == pygame.K_r:
+                    state = 1
+                    score = 0
+                    config.BOARD = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
+                    current_figure = Figure()
+                    other = []
+                elif event.key == pygame.K_s and state == 1:
+                    config.TIME_BY_CELL = SPEED
                 elif event.key == pygame.K_b:
                     state = 2
                 elif event.key == pygame.K_v and state == 0:
@@ -46,8 +60,8 @@ if __name__ == '__main__':
                     if state == 1:
                         current_figure.change(event.key)
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_s:
-                    config.TIME_BY_CELL = int(config.TIME_BY_CELL * 3)
+                if event.key == pygame.K_s and state == 1:
+                    config.TIME_BY_CELL = NORMAL
 
         if state == 1:
             current_figure, previous_figure = current_figure.update()
@@ -80,13 +94,11 @@ if __name__ == '__main__':
             screen.fill(BACKGROUND)
             drawing.board()
             drawing.figure(current_figure)
-            # for i in other:
-            #     drawing.figure(i)
             drawing.score(score)
             drawing.info()
         elif state == 0:
-            pygame.draw.rect(screen, BACKGROUND, (xShift + TILE * BOARD_WIDTH + 10, 0,
-                                                  WIDTH, HEIGHT))
+            screen.fill(BACKGROUND)
+            drawing.board()
             drawing.lose()
             drawing.score(score)
         elif state == 2:
@@ -94,7 +106,7 @@ if __name__ == '__main__':
             drawing.scoreboard()
         elif state == 3:
             screen.fill(BACKGROUND)
-            drawing.saving()
+            drawing.saving(user_name, score)
 
         pygame.display.flip()
         clock.tick(FPS)
