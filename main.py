@@ -17,7 +17,7 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
 
     running = True
-    lose = False
+    state = 1
     falling = 0
     deleted_row = None
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
-                    lose = False
+                    state = 1
                     score = 0
                     config.BOARD = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
                     current_figure = Figure()
@@ -37,13 +37,13 @@ if __name__ == '__main__':
                 elif event.key == pygame.K_s:
                     config.TIME_BY_CELL = int(config.TIME_BY_CELL / 3)
                 else:
-                    if not lose:
+                    if state == 1:
                         current_figure.change(event.key)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s:
                     config.TIME_BY_CELL = int(config.TIME_BY_CELL * 3)
 
-        if not lose:
+        if state == 1:
             current_figure, previous_figure = current_figure.update()
             if falling > 0:
                 other = [i.update(forcibly=(i.positions[0][1] <= deleted_row)) for i in other]
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
                 current_figure = Figure()
                 if len(set(config.BOARD[0])) != 1:
-                    lose = True
+                    state = 0
                     continue
 
             screen.fill(BACKGROUND)
@@ -77,7 +77,8 @@ if __name__ == '__main__':
             # for i in other:
             #     drawing.figure(i)
             drawing.score(score)
-        else:
+            drawing.info()
+        elif state == 0:
             drawing.lose()
 
         pygame.display.flip()

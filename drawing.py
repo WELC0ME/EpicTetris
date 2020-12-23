@@ -29,6 +29,10 @@ class Drawing:
     def score(self, value):
         self.surf.blit(pygame.font.Font(None, 50).render("Score: " + str(value), True, INFO_COLOR), SCORE_POSITION)
 
+    def info(self):
+        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), RESTART_POSITION)
+        self.surf.blit(pygame.font.Font(None, 50).render("'B' - scoreboard", True, INFO_COLOR), SCOREBOARD_POSITION)
+
     def lose(self):
         self.surf.blit(pygame.font.Font(None, 50).render("You lose!", True, INFO_COLOR), LOSE_POSITION)
         self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), RESTART_POSITION)
