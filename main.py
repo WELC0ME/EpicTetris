@@ -11,7 +11,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(SIZE)
 
     drawing = Drawing(screen)
-    drawing.clear()
+    # drawing.clear()
     current_figure = Figure()
     other = []
 
@@ -32,8 +32,10 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if state == 3 and event.key != pygame.K_q and event.key != pygame.K_h:
                     new = pygame.key.name(event.key)
-                    if new != '_' and new.isalpha():
+                    if new != '_' and len(new) == 1:
                         user_name += new
+                    if new == 'backspace' and len(user_name) > 0:
+                        user_name = user_name[:-1]
                 elif event.key == pygame.K_h and state == 3:
                     drawing.send(user_name, score)
                     user_name = ''

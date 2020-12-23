@@ -64,7 +64,7 @@ class Drawing:
                 if len(out) == 10:
                     break
             for i in range(len(out)):
-                self.surf.blit(pygame.font.Font(None, 30).render(str(out[i]), True, INFO_COLOR), (xShift, yShift + step * i))
+                self.surf.blit(pygame.font.Font(None, 30).render(str(out[i][0]) + '    ' + str(out[i][1]) + ' score', True, INFO_COLOR), (xShift, yShift + step * i))
         except IndexError:
             print('Something went wrong')
 
