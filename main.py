@@ -36,6 +36,8 @@ if __name__ == '__main__':
                     other = []
                 elif event.key == pygame.K_s:
                     config.TIME_BY_CELL = int(config.TIME_BY_CELL / 3)
+                elif event.key == pygame.K_b:
+                    state = 2
                 else:
                     if state == 1:
                         current_figure.change(event.key)
@@ -79,7 +81,12 @@ if __name__ == '__main__':
             drawing.score(score)
             drawing.info()
         elif state == 0:
+            pygame.draw.rect(screen, BACKGROUND, (xShift + TILE * BOARD_WIDTH + 10, 0,
+                                                  WIDTH, HEIGHT))
             drawing.lose()
+            drawing.score(score)
+        elif state == 2:
+            drawing.scoreboard()
 
         pygame.display.flip()
         clock.tick(FPS)

@@ -27,12 +27,17 @@ class Drawing:
                                                      yShift + figure.positions[i][1] * TILE))
 
     def score(self, value):
-        self.surf.blit(pygame.font.Font(None, 50).render("Score: " + str(value), True, INFO_COLOR), SCORE_POSITION)
+        self.surf.blit(pygame.font.Font(None, 50).render("Score: " + str(value), True, INFO_COLOR), ROW)
 
     def info(self):
-        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), RESTART_POSITION)
-        self.surf.blit(pygame.font.Font(None, 50).render("'B' - scoreboard", True, INFO_COLOR), SCOREBOARD_POSITION)
+        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), get_row(1))
+        self.surf.blit(pygame.font.Font(None, 50).render("'B' - scoreboard", True, INFO_COLOR), get_row(2))
 
     def lose(self):
-        self.surf.blit(pygame.font.Font(None, 50).render("You lose!", True, INFO_COLOR), LOSE_POSITION)
-        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), RESTART_POSITION)
+        self.surf.blit(pygame.font.Font(None, 50).render("You lose!", True, INFO_COLOR), get_row(1))
+        self.surf.blit(pygame.font.Font(None, 50).render("'S' - save", True, INFO_COLOR), get_row(2))
+        self.surf.blit(pygame.font.Font(None, 50).render("'R' - restart", True, INFO_COLOR), get_row(3))
+        self.surf.blit(pygame.font.Font(None, 50).render("'B' - scoreboard", True, INFO_COLOR), get_row(4))
+
+    def scoreboard(self):
+        pass
