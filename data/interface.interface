@@ -1,0 +1,150 @@
+TabWidget({
+    'position': (0, 0),
+    'base': {
+        'ctbPlay': Button({
+            'position': (1, 1),
+            'active': True,
+            'path': 'play',
+            'function': 'change_tab',
+            'args': "['game']",
+        }),
+        'ctbRating': Button({
+            'position': (151, 1),
+            'active': True,
+            'path': 'rating',
+            'function': 'get_users',
+        }),
+        'ctbProfile': Button({
+            'position': (301, 1),
+            'path': 'profile',
+            'function': 'change_tab',
+            'args': "['login']",
+        }),
+        'ctbExit': Button({
+            'position': (451, 1),
+            'path': 'exit',
+            'function': 'config.shutdown',
+        }),
+    },
+    'tabs': {
+        'game': {
+            'fldField': Field({
+                'position': (50, 77),
+            }),
+            'btnNewGame': Button({
+                'position': (351, 500),
+                'path': 'new_game',
+                'function': 'new_game',
+            }),
+        },
+        'rating': {
+            'txtHeader': Text({
+                'position': (25, 100),
+                'text': '#  Nickname   Rating Best Created',
+            }),
+            'txtPlayer_00': Text({
+                'position': (25, 140),
+                'text': '',
+            }),
+            'txtPlayer_01': Text({
+                'position': (25, 180),
+                'text': '',
+            }),
+            'txtPlayer_02': Text({
+                'position': (25, 220),
+                'text': '',
+            }),
+            'txtPlayer_03': Text({
+                'position': (25, 260),
+                'text': '',
+            }),
+            'txtPlayer_04': Text({
+                'position': (25, 300),
+                'text': '',
+            }),
+            'txtPlayer_05': Text({
+                'position': (25, 340),
+                'text': '',
+            }),
+            'txtPlayer_06': Text({
+                'position': (25, 380),
+                'text': '',
+            }),
+            'txtPlayer_07': Text({
+                'position': (25, 420),
+                'text': '',
+            }),
+            'txtPlayer_08': Text({
+                'position': (25, 460),
+                'text': '',
+            }),
+            'txtPlayer_09': Text({
+                'position': (25, 500),
+                'text': '',
+            }),
+        },
+        'login': {
+            'imgNickName': Image({
+                'position': (50, 126),
+                'path': 'static/nickname',
+            }),
+            'ldtNickname': LineEdit({
+                'position': (250, 126),
+                'name': 'ldtNickname',
+            }),
+            'imgPassword': Image({
+                'position': (50, 252),
+                'path': 'static/password',
+            }),
+            'ldtPassword': LineEdit({
+                'position': (250, 252),
+                'name': 'ldtPassword',
+                'hidden': True,
+            }),
+            'btnSignin': Button({
+                'position': (100, 378),
+                'path': 'sign_in',
+                'function': 'sign_in',
+            }),
+            'btnSignUp': Button({
+                'position': (352, 378),
+                'path': 'sign_up',
+                'function': 'sign_up',
+            }),
+            'imgError': Image({
+                'position': (25, 477),
+                'path': 'errors/none',
+            }),
+        },
+		'profile': {
+            'imgNickname': Image({
+                'position': (50, 126),
+				'path': 'static/nickname',
+            }),
+            'imgRating': Image({
+                'position': (50, 252),
+				'path': 'static/rating',
+            }),
+            'imgBest': Image({
+                'position': (50, 378),
+				'path': 'static/best',
+            }),
+            'imgCreated': Image({
+                'position': (50, 504),
+				'path': 'static/created',
+            }),
+            'txtNickname': Text({
+                'position': (200, 126),
+            }),
+            'txtRating': Text({
+                'position': (200, 252),
+            }),
+            'txtBest': Text({
+                'position': (200, 378),
+            }),
+            'txtCreated': Text({
+                'position': (200, 504),
+            }),
+		},
+    },
+})

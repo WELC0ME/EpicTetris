@@ -1,19 +1,17 @@
-SIZE = WIDTH, HEIGHT = 600, 600
+import pygame
+import sys
+
+SIZE = (600, 600)
 FPS = 60
-BOARD_WIDTH, BOARD_HEIGHT = 10, 20
-TILE = 21
-xShift, yShift = (WIDTH - BOARD_WIDTH * TILE) // 4, (HEIGHT - BOARD_HEIGHT * TILE) // 2
-START_POSITION = BOARD_WIDTH // 2, 0
-ROW = xShift + BOARD_WIDTH * TILE + 30, yShift
-ROW_STEP = 100
-INFO_COLOR = (200, 70, 70)
-COLORS_NUMBER = 7
-FALLING_SPEED = 1
-TIME_BY_CELL = 15
-NORMAL = 15
-SPEED = 5
-MOVE_SPEED = 1
-BACKGROUND = (0, 0, 0)
+
+WINDOW = None
+ACTIVE_LINE_EDIT = ''
+FONT = None
+
+# Game
+BOARD_SIZE = (10, 25)
+TILE = 20
+TIME_BY_CELL = 5
 
 FIGURES_R0 = [[(0, 0), (1, 0), (2, 0), (3, 0)],
               [(0, 0), (1, 0), (0, 1), (1, 1)],
@@ -56,9 +54,27 @@ FIGURES_R4 = [[(0, 0), (1, -1), (2, -2), (3, -3)],
               [(0, 0), (0, 0), (1, 0), (1, -2)]]
 
 FIGURES_ROTATE = [FIGURES_R1, FIGURES_R2, FIGURES_R3, FIGURES_R4]
-FIGURES_NUMBER = len(FIGURES_R0)
-BOARD = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
+
+# network
+SERVER = 'http://epic-tetris-server.herokuapp.com/api/users'
+NICKNAME = ''
+CLIENT = None
+UPDATER = None
+
+# Colors
+BACKGROUND = (34, 40, 49)
+TEXT = (222, 222, 222)
+BLACK = (0, 0, 0)
+
+# Functions
+gsp = lambda _p: 'data/' + _p
+gip = lambda _p: gsp('images/' + _p)
+gap = lambda _p: gsp('audio/' + _p)
+gdp = lambda _p: gsp('database/' + _p)
+ldi = lambda _p: pygame.image.load(_p)
 
 
-def get_row(number):
-    return (ROW[0], ROW[1] + number * ROW_STEP)
+def shutdown():
+    pygame.quit()
+    CLIENT.kill()
+    sys.exit()
