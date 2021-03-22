@@ -1,3 +1,4 @@
+import time
 from db import db_session
 from db.shared import Shared
 from config import *
@@ -12,6 +13,10 @@ class Updater:
         self.saved = ''
 
     def sign_in(self):
+        if len(config.WINDOW.get('ldtNickname').content.text) < 4:
+            return
+        if len(config.WINDOW.get('ldtPassword').content.text) < 4:
+            return
         self.saved = config.WINDOW.get('ldtNickname').content.text
         self.send({
             'method': 'get',
@@ -20,6 +25,10 @@ class Updater:
         }, 'sign_in')
 
     def sign_up(self):
+        if len(config.WINDOW.get('ldtNickname').content.text) < 4:
+            return
+        if len(config.WINDOW.get('ldtPassword').content.text) < 4:
+            return
         self.saved = config.WINDOW.get('ldtNickname').content.text
         self.send({
             'method': 'post',

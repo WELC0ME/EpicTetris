@@ -25,17 +25,15 @@ class LineEdit(Element):
 
     def mouse_down(self, pos):
         self.base.mouse_down(pos)
-        if self.name == config.ACTIVE_LINE_EDIT:
-            self.base.animation = 'pressed'
 
     def key_down(self, key):
-        if self.name != config.ACTIVE_LINE_EDIT:
+        if self.base.animation != 'pressed':
             return
         letter = pygame.key.name(key)
         if letter == 'backspace':
             self.content.set_text(self.content.text[:-1])
         elif len(letter) == 1 and len(self.content.text) < 10:
-            self.content.set_text(self.content.text + letter,)
+            self.content.set_text(self.content.text + letter)
 
     def show(self, surf):
         self.base.show(surf)

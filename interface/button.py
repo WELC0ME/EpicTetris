@@ -22,6 +22,10 @@ class Button(Image):
     def mouse_down(self, pos):
         if self.collide(pos):
             eval(self.function)(*eval(self.args))
+            self.animation = 'pressed'
+        else:
+            if self.animation == 'pressed':
+                self.animation = 'idle'
 
     def mouse_motion(self, pos):
         if self.collide(pos):

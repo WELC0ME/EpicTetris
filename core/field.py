@@ -105,10 +105,11 @@ class Field(Element):
                     if any([i == 1 for i in self.field[0]]):
                         self.state = '__LOSE__'
                         config.UPDATER.send_result(self.score)
-                        txt_rating = config.WINDOW.get('txtRating')
-                        txt_rating.set_text(int(txt_rating.text) + self.score)
-                        txt_best = config.WINDOW.get('txt_best')
-                        txt_best.set_text(max(int(txt_best.text), self.score))
+                        if config.NICKNAME:
+                            rating = config.WINDOW.get('txtRating')
+                            rating.set_text(int(rating.text) + self.score)
+                            best = config.WINDOW.get('txtBest')
+                            best.set_text(max(int(best.text), self.score))
                     self.score += 2 ** len(deleted) if deleted else 0
                     self.txt_score.set_text('Score: ' + str(self.score))
                     self.figure = self.next

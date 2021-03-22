@@ -19,8 +19,13 @@ while True:
     answer = db_sess.query(Shared).filter(Shared.id == 2).first()
     if request.data and not answer.data:
         send = eval(request.data)
-        res = str(getattr(requests, send['method'])(
-            SERVER + send['add'], json=send).json())
+        try:
+            res = str(getattr(requests, send['method'])(
+                SERVER + send['add'], json=send).json())
+        except Exception:
+            res = str({
+                'result': 'unknown error'
+            })
         answer.data = res
         db_sess.merge(answer)
         db_sess.commit()
