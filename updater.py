@@ -1,4 +1,3 @@
-import time
 from db import db_session
 from db.shared import Shared
 from config import *
@@ -13,9 +12,7 @@ class Updater:
         self.saved = ''
 
     def sign_in(self):
-        if len(config.WINDOW.get('ldtNickname').content.text) < 4:
-            return
-        if len(config.WINDOW.get('ldtPassword').content.text) < 4:
+        if self.check_line_edits():
             return
         self.saved = config.WINDOW.get('ldtNickname').content.text
         self.send({
@@ -25,9 +22,7 @@ class Updater:
         }, 'sign_in')
 
     def sign_up(self):
-        if len(config.WINDOW.get('ldtNickname').content.text) < 4:
-            return
-        if len(config.WINDOW.get('ldtPassword').content.text) < 4:
+        if self.check_line_edits():
             return
         self.saved = config.WINDOW.get('ldtNickname').content.text
         self.send({
@@ -72,6 +67,28 @@ class Updater:
         created = str(user['created'])
         return number + nickname + rating + best + created
 
+    @staticmethod
+    def recognize_response(response):
+        errors = {
+            'Empty request': 'server',
+            'Bad request': 'server',
+            'Nickname is already exists': 'exists_nickname',
+            'OK': 'idle',
+            'Incorrect password': 'incorrect_password',
+            'Not found': 'unknown_nickname',
+        }
+        config.WINDOW.get('imgError').animation = errors.get(
+            response['result'], 'unknown')
+
+    @staticmethod
+    def check_line_edits():
+        if len(config.WINDOW.get('ldtNickname').content.text) < 4:
+            config.WINDOW.get('imgError').animation = 'short_nickname'
+            return True
+        if len(config.WINDOW.get('ldtPassword').content.text) < 4:
+            config.WINDOW.get('imgError').animation = 'short_password'
+            return True
+
     def update(self):
         if not self.waiting:
             return
@@ -81,6 +98,7 @@ class Updater:
             return
         res = eval(answer.data)
         if self.waiting in ['sign_in', 'sign_up']:
+            self.recognize_response(res)
             if res['result'] == 'OK':
                 config.NICKNAME = self.saved
                 del self.saved
@@ -91,8 +109,7 @@ class Updater:
                 config.WINDOW.get('txtRating').set_text(user['rating'])
                 config.WINDOW.get('txtBest').set_text(user['best'])
                 config.WINDOW.get('txtCreated').set_text(user['created'])
-            else:
-                print(res)
+
         elif self.waiting == 'get_users':
             config.WINDOW.change_tab('rating')
             for i, user in enumerate(sorted(res['users'], reverse=True,

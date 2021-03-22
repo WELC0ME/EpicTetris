@@ -116,8 +116,8 @@ TabWidget({
                 'function': 'sign_up',
             }),
             'imgError': Image({
-                'position': (25, 477),
-                'path': 'errors/none',
+                'position': (25, 504),
+                'path': 'static/error',
             }),
         },
 		'profile': {
