@@ -134,16 +134,16 @@ TabWidget({
 				'path': 'static/created',
             }),
             'txtNickname': Text({
-                'position': (200, 126),
+                'position': (250, 146),
             }),
             'txtRating': Text({
-                'position': (200, 252),
+                'position': (250, 272),
             }),
             'txtBest': Text({
-                'position': (200, 378),
+                'position': (250, 398),
             }),
             'txtCreated': Text({
-                'position': (200, 504),
+                'position': (250, 524),
             }),
 		},
     },

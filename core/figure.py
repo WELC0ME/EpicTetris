@@ -1,89 +1,82 @@
 import random
 from config import *
+from core import Block
 
 
 class Figure:
 
-    def __init__(self, field, positions=None, color=None):
-        random.seed()
-        self.number = random.randint(0, len(FIGURES_R0) - 1)
+    def __init__(self, color=None, options=None):
+        self.color = color if color else random.randint(0, 7)
+        self.options = options if options else random.choice(FIGURES)
         self.rotation = 0
-        if not positions:
-            self.positions = [(BOARD_SIZE[0] // 2 + i[0], i[1])
-                              for i in FIGURES_R0[self.number]]
-            self.color = random.randint(1, 8)
-        else:
-            self.positions = positions
-            self.color = color
-        self.falling = 0
-        self.field = field
+        self.state = '__STOP__'
+        self.blocks = []
+        self.shift = 0
+        self.corner = (BOARD_SIZE[0] // 2, 0)
+        for i, v in enumerate(self.options[self.rotation]):
+            x, y = i % 4, i // 4
+            if v == '1':
+                self.blocks.append(Block(self.color, (self.corner[0] + x,
+                                                      self.corner[1] + y)))
 
-    def update(self, forcibly=False):
+    def copy(self):
+        return Figure(self.color, self.options)
 
-        if self.falling == 0:
-            for i in range(len(self.positions)):
-                if not self.check_position(self.positions[i][0],
-                                           self.positions[i][1] + 1,
-                                           forcibly=forcibly):
-                    if forcibly:
-                        self.falling = -TIME_BY_CELL
-                        return self, False
-                    return False, self
-        if self.falling > 0:
-            for i in range(len(self.positions)):
-                self.positions[i] = (
-                    self.positions[i][0],
-                    self.positions[i][1] + 1 / TIME_BY_CELL)
+    def show(self, surf):
+        [i.show(surf, shift=self.shift) for i in self.blocks]
+        if self.state == '__FALLING__':
+            self.shift += FALLING_SPEED
+        if self.shift >= TILE:
+            for block in self.blocks:
+                block.position = (block.position[0], block.position[1] + 1)
+            self.corner = (self.corner[0], self.corner[1] + 1)
+            self.shift = 0
+            self.state = '__STOP__'
 
-        self.falling += 1
-        if self.falling >= TIME_BY_CELL:
-            for i in range(len(self.positions)):
-                self.positions[i] = (self.positions[i][0],
-                                     int(round(self.positions[i][1])))
-            self.falling = 0
+    def static_show(self, surf, image):
+        pos = (image.position[0] + 25, image.position[1] + 45)
+        for i, v in enumerate(self.options[self.rotation]):
+            x, y = i % 4, i // 4
+            if v == '1':
+                tmp_block = Block(self.color, (0, 0))
+                surf.blit(tmp_block.image, (pos[0] + x * TILE,
+                                            pos[1] + y * TILE))
 
-        return self, False
-
-    def change(self, button):
-        keys = {pygame.K_a: [self.move, -1],
-                pygame.K_d: [self.move, 1],
-                pygame.K_e: [self.rotate, 1],
-                pygame.K_q: [self.rotate, 3]}
-        if button not in keys.keys():
-            return
-        keys[button][0](keys[button][1])
+    def can_move(self, field, direction):
+        check = all([field.get(block.position, direction) == 0
+                     for block in self.blocks])
+        if self.state == '__FALLING__':
+            direction = (direction[0], direction[1] + 1)
+            check = (check and all([field.get(block.position, direction) == 0
+                                    for block in self.blocks]))
+        return check
 
     def move(self, direction):
-        for i in range(len(self.positions)):
-            if not self.check_position(self.positions[i][0] + direction,
-                                       int(self.positions[i][1])):
-                return
-            if self.falling != 0:
-                if not self.check_position(self.positions[i][0] + direction,
-                                           int(self.positions[i][1]) + 1):
-                    return
-        for i in range(len(self.positions)):
-            self.positions[i] = (self.positions[i][0] + direction,
-                                 self.positions[i][1])
+        self.corner = (self.corner[0] + direction[0],
+                       self.corner[1] + direction[1])
+        for block in self.blocks:
+            block.position = (block.position[0] + direction[0],
+                              block.position[1] + direction[1])
 
-    def rotate(self, adj):
+    def can_rotate(self, field, turnover):
+        rotation = (self.rotation + turnover) % 4
+        new_blocks = []
+        for i, v in enumerate(self.options[rotation]):
+            x, y = i % 4, i // 4
+            if v == '1':
+                new_blocks.append(Block(self.color, (self.corner[0] + x,
+                                                     self.corner[1] + y)))
+        check = all([field.get(block.position) == 0 for block in new_blocks])
+        if self.state == '__FALLING__':
+            check = (check and all([field.get(block.position, (0, 1)) == 0
+                                    for block in new_blocks]))
+        return check
 
-        for k in range(adj):
-            rotated = FIGURES_ROTATE[self.rotation]
-            for i in range(len(self.positions)):
-                new_x = self.positions[i][0] + rotated[self.number][i][0]
-                new_y = int(self.positions[i][1] + 1)
-                new_y += rotated[self.number][i][1]
-                if not self.check_position(new_x, new_y):
-                    return
-            for i in range(len(self.positions)):
-                new_x = self.positions[i][0] + rotated[self.number][i][0]
-                new_y = self.positions[i][1] + rotated[self.number][i][1]
-                self.positions[i] = (new_x, new_y)
-            self.rotation = (self.rotation + 1) % 4
-
-    def check_position(self, x, y, forcibly=False):
-        return all([
-            0 <= x < BOARD_SIZE[0],
-            0 <= y < BOARD_SIZE[1],
-        ]) and (forcibly or self.field.field[y][x] == 0)
+    def rotate(self, turnover):
+        self.rotation = (self.rotation + turnover) % 4
+        self.blocks = []
+        for i, v in enumerate(self.options[self.rotation]):
+            x, y = i % 4, i // 4
+            if v == '1':
+                self.blocks.append(Block(self.color, (self.corner[0] + x,
+                                                      self.corner[1] + y)))

@@ -8,7 +8,6 @@ class Updater:
 
     def __init__(self):
         db_session.global_init(gdp('shared_data.db'))
-        self.db_sess = db_session.create_session()
         self.waiting = ''
         self.saved = ''
 
@@ -17,7 +16,6 @@ class Updater:
         self.send({
             'method': 'get',
             'add': '/' + config.WINDOW.get('ldtNickname').content.text,
-            'nickname': config.WINDOW.get('ldtNickname').content.text,
             'password': config.WINDOW.get('ldtPassword').content.text,
         }, 'sign_in')
 
@@ -37,22 +35,24 @@ class Updater:
         }, 'get_users')
 
     def send_result(self, result):
-        self.send({
-            'method': 'update',
-            'add': '/' + config.NICKNAME,
-            'game_result': result,
-        }, 'send_result')
+        if config.NICKNAME:
+            self.send({
+                'method': 'put',
+                'add': '/' + config.NICKNAME,
+                'game_result': result,
+            }, 'send_result')
 
     def send(self, data, wait):
         if self.waiting:
             return
-        request = self.db_sess.query(Shared).filter(Shared.id == 1).first()
+        db_sess = db_session.create_session()
+        request = db_sess.query(Shared).filter(Shared.id == 1).first()
         if request.data:
             return
         request.data = str(data)
         self.waiting = wait
-        self.db_sess.merge(request)
-        self.db_sess.commit()
+        db_sess.merge(request)
+        db_sess.commit()
 
     @staticmethod
     def prepare_rating(number, user):
@@ -66,7 +66,8 @@ class Updater:
     def update(self):
         if not self.waiting:
             return
-        answer = self.db_sess.query(Shared).filter(Shared.id == 2).first()
+        db_sess = db_session.create_session()
+        answer = db_sess.query(Shared).filter(Shared.id == 2).first()
         if not answer.data:
             return
         res = eval(answer.data)
@@ -92,5 +93,5 @@ class Updater:
 
         self.waiting = ''
         answer.data = ''
-        self.db_sess.merge(answer)
-        self.db_sess.commit()
+        db_sess.merge(answer)
+        db_sess.commit()

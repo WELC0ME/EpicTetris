@@ -16,7 +16,9 @@ class TabWidget(Element):
         return list(self.base.values()) + list(self.tabs[self.tab].values())
 
     def get(self, name):
-        return self.tabs[self.tab][name]
+        for tab in list(self.tabs.keys()):
+            if name in self.tabs[tab]:
+                return self.tabs[tab][name]
 
     def mouse_down(self, pos):
         [i.mouse_down(pos) for i in self.get_elements()]

@@ -7,6 +7,7 @@ import updater
 import config
 
 if __name__ == '__main__':
+    config.CLIENT = subprocess.Popen([sys.executable, 'client.py'])
     pygame.init()
     screen = pygame.display.set_mode(SIZE)
     pygame.display.set_caption('Epic Tetris')
@@ -21,7 +22,6 @@ if __name__ == '__main__':
     config.WINDOW = eval(open(gsp('interface.interface'), 'r',
                               encoding='utf8').read())
     config.UPDATER = updater.Updater()
-    config.CLIENT = subprocess.Popen([sys.executable, 'client.py'])
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
