@@ -4,5 +4,4 @@ from interface.image import Image
 from interface.button import Button
 from interface.text import Text
 from interface.line_edit import LineEdit
-
-
+from interface.text_area import TextArea

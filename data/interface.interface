@@ -38,49 +38,45 @@ TabWidget({
             }),
         },
         'rating': {
-            'txtHeader': Text({
+            'tarHeader': TextArea({
                 'position': (25, 100),
-                'text': '#  Nickname   Rating Best Created',
+                'user': {
+                    'number': '#',
+                    'nickname': 'Nickname',
+                    'rating': 'Rating',
+                    'best': 'Best',
+                    'created': 'Created',
+                },
             }),
-            'txtPlayer_00': Text({
+            'tarPlayer00': TextArea({
                 'position': (25, 140),
-                'text': '',
             }),
-            'txtPlayer_01': Text({
+            'tarPlayer01': TextArea({
                 'position': (25, 180),
-                'text': '',
             }),
-            'txtPlayer_02': Text({
+            'tarPlayer02': TextArea({
                 'position': (25, 220),
-                'text': '',
             }),
-            'txtPlayer_03': Text({
+            'tarPlayer03': TextArea({
                 'position': (25, 260),
-                'text': '',
             }),
-            'txtPlayer_04': Text({
+            'tarPlayer04': TextArea({
                 'position': (25, 300),
-                'text': '',
             }),
-            'txtPlayer_05': Text({
+            'tarPlayer05': TextArea({
                 'position': (25, 340),
-                'text': '',
             }),
-            'txtPlayer_06': Text({
+            'tarPlayer06': TextArea({
                 'position': (25, 380),
-                'text': '',
             }),
-            'txtPlayer_07': Text({
+            'tarPlayer07': TextArea({
                 'position': (25, 420),
-                'text': '',
             }),
-            'txtPlayer_08': Text({
+            'tarPlayer08': TextArea({
                 'position': (25, 460),
-                'text': '',
             }),
-            'txtPlayer_09': Text({
+            'tarPlayer09': TextArea({
                 'position': (25, 500),
-                'text': '',
             }),
         },
         'login': {
@@ -105,7 +101,7 @@ TabWidget({
                 'name': 'ldtPassword',
                 'hidden': True,
             }),
-            'btnSignin': Button({
+            'btnSignIn': Button({
                 'position': (100, 378),
                 'path': 'sign_in',
                 'function': 'sign_in',

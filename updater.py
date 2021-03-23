@@ -59,15 +59,6 @@ class Updater:
         db_sess.commit()
 
     @staticmethod
-    def prepare_rating(number, user):
-        number = ('0' + str(number + 1)).ljust(3, ' ')
-        nickname = str(user['nickname']).ljust(15, ' ')
-        rating = str(user['rating']).ljust(12, ' ')
-        best = str(user['best']).ljust(8, ' ')
-        created = str(user['created'])
-        return number + nickname + rating + best + created
-
-    @staticmethod
     def recognize_response(response):
         errors = {
             'Empty request': 'server',
@@ -96,27 +87,30 @@ class Updater:
         answer = db_sess.query(Shared).filter(Shared.id == 2).first()
         if not answer.data:
             return
-        res = eval(answer.data)
-        if self.waiting in ['sign_in', 'sign_up']:
-            self.recognize_response(res)
-            if res['result'] == 'OK':
-                config.NICKNAME = self.saved
-                del self.saved
-                config.WINDOW.tabs['login'] = config.WINDOW.tabs['profile']
-                config.WINDOW.change_tab('profile')
-                user = res['user']
-                config.WINDOW.get('txtNickname').set_text(user['nickname'])
-                config.WINDOW.get('txtRating').set_text(user['rating'])
-                config.WINDOW.get('txtBest').set_text(user['best'])
-                config.WINDOW.get('txtCreated').set_text(user['created'])
+        try:
+            res = eval(answer.data)
+            if self.waiting in ['sign_in', 'sign_up']:
+                self.recognize_response(res)
+                if res['result'] == 'OK':
+                    config.NICKNAME = self.saved
+                    del self.saved
+                    config.WINDOW.tabs['login'] = config.WINDOW.tabs['profile']
+                    config.WINDOW.change_tab('profile')
+                    user = res['user']
+                    config.WINDOW.get('txtNickname').set_text(user['nickname'])
+                    config.WINDOW.get('txtRating').set_text(user['rating'])
+                    config.WINDOW.get('txtBest').set_text(user['best'])
+                    config.WINDOW.get('txtCreated').set_text(user['created'])
 
-        elif self.waiting == 'get_users':
-            config.WINDOW.change_tab('rating')
-            for i, user in enumerate(sorted(res['users'], reverse=True,
-                                            key=lambda x: x['rating'])[:10]):
-                config.WINDOW.get('txtPlayer_0' + str(i)).set_text(
-                    self.prepare_rating(i, user))
-
+            elif self.waiting == 'get_users':
+                config.WINDOW.change_tab('rating')
+                for i, user in enumerate(sorted(
+                        res['users'], key=lambda x: x['rating'])[::-1][:10]):
+                    user['number'] = i + 1
+                    config.WINDOW.get('tarPlayer0' + str(i)).set_text(user)
+        except Exception as e:
+            print('ERROR', e)
+            pass
         self.waiting = ''
         answer.data = ''
         db_sess.merge(answer)
