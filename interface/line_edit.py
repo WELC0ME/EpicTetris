@@ -1,6 +1,5 @@
 import pygame
 from interface import Element, Text, Button
-import config
 
 
 class LineEdit(Element):

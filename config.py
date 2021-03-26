@@ -36,7 +36,7 @@ UPDATER = None
 
 # Colors
 BACKGROUND = (34, 40, 49)
-TEXT = (222, 222, 222)
+TEXT = (238, 238, 238)
 BLACK = (0, 0, 0)
 
 # Functions

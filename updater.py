@@ -1,3 +1,4 @@
+from werkzeug.security import generate_password_hash
 from db import db_session
 from db.shared import Shared
 from config import *
@@ -44,6 +45,7 @@ class Updater:
                 'method': 'put',
                 'add': '/' + config.NICKNAME,
                 'game_result': result,
+                'token': self.generate_token(config.NICKNAME, result),
             }, 'send_result')
 
     def send(self, data, wait):
@@ -57,6 +59,13 @@ class Updater:
         self.waiting = wait
         db_sess.merge(request)
         db_sess.commit()
+
+    @staticmethod
+    def generate_token(username, result):
+        numbers = [int(result)] + [32767 + ord(i) for i in str(username)]
+        numbers = [(i >> 119) ^ 37 for i in numbers]
+        numbers = '_'.join([chr(i) for i in numbers])
+        return generate_password_hash(numbers)
 
     @staticmethod
     def recognize_response(response):
