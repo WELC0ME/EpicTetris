@@ -31,7 +31,7 @@ class LineEdit(Element):
         letter = pygame.key.name(key)
         if letter == 'backspace':
             self.content.set_text(self.content.text[:-1])
-        elif len(letter) == 1 and len(self.content.text) < 10:
+        elif len(letter) == 1 and len(self.content.text) < 8:
             self.content.set_text(self.content.text + letter)
 
     def show(self, surf):

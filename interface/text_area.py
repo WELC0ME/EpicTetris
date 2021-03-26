@@ -11,19 +11,19 @@ class TextArea(Element):
                 'text': '',
             }),
             'nickname': Text({
-                'position': (self.position[0] + 30, self.position[1]),
+                'position': (self.position[0] + 45, self.position[1]),
                 'text': '',
             }),
             'rating': Text({
-                'position': (self.position[0] + 210, self.position[1]),
+                'position': (self.position[0] + 225, self.position[1]),
                 'text': '',
             }),
             'best': Text({
-                'position': (self.position[0] + 320, self.position[1]),
+                'position': (self.position[0] + 335, self.position[1]),
                 'text': '',
             }),
             'created': Text({
-                'position': (self.position[0] + 400, self.position[1]),
+                'position': (self.position[0] + 415, self.position[1]),
                 'text': '',
             }),
         }

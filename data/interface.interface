@@ -39,7 +39,7 @@ TabWidget({
         },
         'rating': {
             'tarHeader': TextArea({
-                'position': (25, 100),
+                'position': (15, 100),
                 'user': {
                     'number': '#',
                     'nickname': 'Nickname',
@@ -49,34 +49,34 @@ TabWidget({
                 },
             }),
             'tarPlayer00': TextArea({
-                'position': (25, 140),
+                'position': (15, 140),
             }),
             'tarPlayer01': TextArea({
-                'position': (25, 180),
+                'position': (15, 180),
             }),
             'tarPlayer02': TextArea({
-                'position': (25, 220),
+                'position': (15, 220),
             }),
             'tarPlayer03': TextArea({
-                'position': (25, 260),
+                'position': (15, 260),
             }),
             'tarPlayer04': TextArea({
-                'position': (25, 300),
+                'position': (15, 300),
             }),
             'tarPlayer05': TextArea({
-                'position': (25, 340),
+                'position': (15, 340),
             }),
             'tarPlayer06': TextArea({
-                'position': (25, 380),
+                'position': (15, 380),
             }),
             'tarPlayer07': TextArea({
-                'position': (25, 420),
+                'position': (15, 420),
             }),
             'tarPlayer08': TextArea({
-                'position': (25, 460),
+                'position': (15, 460),
             }),
             'tarPlayer09': TextArea({
-                'position': (25, 500),
+                'position': (15, 500),
             }),
         },
         'login': {
